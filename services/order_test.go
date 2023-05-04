@@ -127,3 +127,29 @@ func TestCreateOrder_Failed_Find_Product(t *testing.T) {
 	err = orderService.CreateOrder(bruce.GetID(), productsIDs)
 	assert.NotNil(t, err)
 }
+
+// TestCreateOrder_Success tests the CreateOrder function with a successful
+// order creation
+func TestCreateOrder_Success(t *testing.T) {
+	mockProductRepository := productMock.NewMockProductRepository()
+	mockCustomerRepository := customerMock.NewMockCustomerRepository()
+	bruce, err := aggregate.NewCustomer("Bruce")
+	assert.Nil(t, err)
+	products := init_test_products(t)
+	productsIDs := []uuid.UUID{products[0].GetID(), products[1].GetID(), products[2].GetID()}
+	mockCustomerRepository.On("Find", bruce.GetID()).Return(bruce, nil)
+	mockProductRepository.On("Store", products[0]).Return(nil)
+	mockProductRepository.On("Store", products[1]).Return(nil)
+	mockProductRepository.On("Store", products[2]).Return(nil)
+	mockProductRepository.On("Find", products[0].GetID()).Return(products[0], nil)
+	mockProductRepository.On("Find", products[1].GetID()).Return(products[1], nil)
+	mockProductRepository.On("Find", products[2].GetID()).Return(products[2], nil)
+	orderService, err := services.NewOrderService(
+		services.WithCustomerRepository(mockCustomerRepository),
+		services.WithProductRepository(mockProductRepository, products),
+	)
+	assert.Nil(t, err)
+	assert.NotNil(t, orderService)
+	err = orderService.CreateOrder(bruce.GetID(), productsIDs)
+	assert.Nil(t, err)
+}

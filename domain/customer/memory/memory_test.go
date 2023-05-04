@@ -73,7 +73,7 @@ func TestCustomerMemoryRepository_Find_Failed(t *testing.T) {
 	// Find the customer
 	foundCustomer, err := repo.Find(customer.GetID())
 	assert.NotNil(t, err)
-	assert.Equal(t, aggregate.Customer{}, foundCustomer)
+	assert.Nil(t, foundCustomer)
 }
 
 // TestCustomerMemoryRepository_Find_Not_Initialized tests the Find method of the MemoryCustomerRepository
