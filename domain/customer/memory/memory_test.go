@@ -19,7 +19,7 @@ func TestCustomerMemoryRepository_Add_OK(t *testing.T) {
 	repo := memory.NewMemoryCustomerRepository()
 	assert.NotNil(t, repo)
 	// Add the customer first time
-	err = repo.Add(*customer)
+	err = repo.Add(customer)
 	assert.Nil(t, err)
 }
 
@@ -34,10 +34,10 @@ func TestCustomerMemoryRepository_Add_Failed(t *testing.T) {
 	repo := memory.NewMemoryCustomerRepository()
 	assert.NotNil(t, repo)
 	// Add the customer first time
-	err = repo.Add(*customer)
+	err = repo.Add(customer)
 	assert.Nil(t, err)
 	// Add the customer second time
-	err = repo.Add(*customer)
+	err = repo.Add(customer)
 	assert.NotNil(t, err)
 }
 
@@ -52,7 +52,7 @@ func TestCustomerMemoryRepository_Find_OK(t *testing.T) {
 	repo := memory.NewMemoryCustomerRepository()
 	assert.NotNil(t, repo)
 	// Add the customer first time
-	err = repo.Add(*customer)
+	err = repo.Add(customer)
 	assert.Nil(t, err)
 	// Find the customer
 	foundCustomer, err := repo.Find(customer.GetID())
@@ -86,7 +86,7 @@ func TestCustomerMemoryRepository_Find_Not_Initialized(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, customer)
 	// Add the customer first time
-	err = repo.Add(*customer)
+	err = repo.Add(customer)
 	assert.Nil(t, err)
 }
 
@@ -101,11 +101,11 @@ func TestCustomerMemoryRepository_Update_OK(t *testing.T) {
 	repo := memory.NewMemoryCustomerRepository()
 	assert.NotNil(t, repo)
 	// Add the customer first time
-	err = repo.Add(*customer)
+	err = repo.Add(customer)
 	assert.Nil(t, err)
 	// Update the customer
 	customer.SetName("Ulce")
-	err = repo.Update(*customer)
+	err = repo.Update(customer)
 	assert.Nil(t, err)
 	found, err := repo.Find(customer.GetID())
 	assert.Nil(t, err)
@@ -124,7 +124,7 @@ func TestCustomerMemoryRepository_Update_Failed(t *testing.T) {
 	// Update the non existing customer
 	newCustomer, err := aggregate.NewCustomer("Ulce")
 	assert.Nil(t, err)
-	err = repo.Update(*newCustomer)
+	err = repo.Update(newCustomer)
 	assert.NotNil(t, err)
 }
 
@@ -151,13 +151,13 @@ func TestCustomerMemoryRepository_FindAll_OK(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, customer)
 	// Add the customer
-	err = repo.Add(*customer)
+	err = repo.Add(customer)
 	assert.Nil(t, err)
 	// Create a new customer
 	customer, err = aggregate.NewCustomer("Ulce")
 	assert.Nil(t, err)
 	// Add the customer
-	err = repo.Add(*customer)
+	err = repo.Add(customer)
 	assert.Nil(t, err)
 	// Find all customers
 	customers, err := repo.FindAll()

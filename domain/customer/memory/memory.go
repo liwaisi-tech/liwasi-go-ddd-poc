@@ -10,17 +10,17 @@ import (
 )
 
 type MemoryCustomerRepository struct {
-	customers map[uuid.UUID]aggregate.Customer
+	customers map[uuid.UUID]*aggregate.Customer
 	sync.Mutex
 }
 
 func NewMemoryCustomerRepository() *MemoryCustomerRepository {
 	return &MemoryCustomerRepository{
-		customers: make(map[uuid.UUID]aggregate.Customer),
+		customers: make(map[uuid.UUID]*aggregate.Customer),
 	}
 }
 
-func (mcr *MemoryCustomerRepository) Find(ID uuid.UUID) (customer aggregate.Customer, err error) {
+func (mcr *MemoryCustomerRepository) Find(ID uuid.UUID) (customer *aggregate.Customer, err error) {
 	customer, ok := mcr.customers[ID]
 	if !ok {
 		err = repository.ErrCustomerNotFound
@@ -29,17 +29,17 @@ func (mcr *MemoryCustomerRepository) Find(ID uuid.UUID) (customer aggregate.Cust
 	return
 }
 
-func (mcr *MemoryCustomerRepository) FindAll() (customers []aggregate.Customer, err error) {
+func (mcr *MemoryCustomerRepository) FindAll() (customers []*aggregate.Customer, err error) {
 	for _, customer := range mcr.customers {
 		customers = append(customers, customer)
 	}
 	return
 }
 
-func (mcr *MemoryCustomerRepository) Add(customer aggregate.Customer) (err error) {
+func (mcr *MemoryCustomerRepository) Add(customer *aggregate.Customer) (err error) {
 	if mcr.customers == nil {
 		mcr.Lock()
-		mcr.customers = make(map[uuid.UUID]aggregate.Customer)
+		mcr.customers = make(map[uuid.UUID]*aggregate.Customer)
 		mcr.Unlock()
 	}
 	// Make sure the customer doesn't already exist
@@ -58,10 +58,10 @@ func (mcr *MemoryCustomerRepository) Add(customer aggregate.Customer) (err error
 	return
 }
 
-func (mcr *MemoryCustomerRepository) Update(customer aggregate.Customer) (err error) {
+func (mcr *MemoryCustomerRepository) Update(customer *aggregate.Customer) (err error) {
 	if mcr.customers == nil {
 		mcr.Lock()
-		mcr.customers = make(map[uuid.UUID]aggregate.Customer)
+		mcr.customers = make(map[uuid.UUID]*aggregate.Customer)
 		mcr.Unlock()
 	}
 	// Make sure the customer exists

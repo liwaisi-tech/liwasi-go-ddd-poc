@@ -14,8 +14,8 @@ var (
 )
 
 type CustomerRepository interface {
-	Find(ID uuid.UUID) (customer aggregate.Customer, err error)
-	FindAll() (customers []aggregate.Customer, err error)
-	Add(customer aggregate.Customer) (err error)
-	Update(customer aggregate.Customer) (err error)
+	Find(ID uuid.UUID) (customer *aggregate.Customer, err error)
+	FindAll() (customers []*aggregate.Customer, err error)
+	Add(customer *aggregate.Customer) (err error)
+	Update(customer *aggregate.Customer) (err error)
 }
